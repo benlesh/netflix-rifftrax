@@ -5,7 +5,7 @@ A Chrome Extension for syncing up RiffTrax audio with Netflix video.
 ## DISCLAIMER
 
 This project was cobbled together for Netflix Hackday on November 2, 2015. It's not really a "sanctioned" Netflix extension, and is in no
-way associated with Netflix the company. Use at your own risk. I (Ben Lesh) might work for Netflix, but this is a project for "fun". 
+way associated with Netflix the company. Use at your own risk.
 
 _By using this Chrome Extension you agree that you're using it at your own risk._
 
