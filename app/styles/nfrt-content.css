@@ -1,0 +1,16 @@
+#nfrt {
+  position: absolute;
+  z-index: 1000000;
+  top: 50px;
+  left: 25px;
+}
+
+#nfrt .nfrt-dialog {
+  display: none;
+  background: black;
+  padding: 20px;
+}
+
+#nfrt button {
+  background: #333333;
+}
