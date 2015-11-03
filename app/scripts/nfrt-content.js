@@ -1,16 +1,33 @@
+const KNOWN_RIFFS = {
+  '1181616': {
+    name: 'Starship Troopers',
+    offset: 181.3,
+    videoVolume: 1
+  },
+  '60026347': {
+    name: 'Road House',
+    offset: 146.8,
+    videoVolume: 0.6
+  },
+  '1056189': {
+    offset: 124.6,
+    name: 'Top Gun',
+    videoVolume: 1
+  }
+};
+
 const template = `<div id="nfrt">
   <button id="nfrt-showFind">RiffTrax</button>
   <div class="nfrt-dialog">
     <form id="nfrt-findForm" name="findForm">
       <h3>Load RiffTrax</h3>
 
-      <label for="audioFile">Audio File:</label>
-      <input type="file" name="audioFile" id="audioFile" accept=".mp3" required/><br/>
+      <div class="row">
+        <label for="audioFile">Audio File:</label>
+        <input type="file" name="audioFile" id="audioFile" accept=".mp3" required/><br/>
+      </div>
 
-      <label for="syncFile">Sync File:</label>
-      <input type="file" name="syncFile" id="syncFile" accept=".sync"/><br/>
-
-      <div>
+      <div class="row">
         <button id="nftr-load" type="submit">Load</button>
       </div>
     </form>
@@ -23,34 +40,28 @@ content.innerHTML = template;
 document.body.appendChild(content);
 content.style.display = 'none';
 
-function getSyncOffset(syncURL, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function syncLoaded() {
-    const syncData = xhr.responseText;
-    const parts = syncData.split('\n');
-    var result = -3; // HACK: 3 second offset to get things lined up (unsure why).
-    for (var i = 0, len = parts.length; i < len; i++) {
-      var innerParts = parts[i].split('=');
-      if (innerParts[0] === 'riffdelay_init' || innerParts[0] === 'time_offset') {
-        result += +innerParts[1];
-      }
-    }
-    callback(result);
-  };
-  xhr.open('GET', syncURL);
-  xhr.send();
-}
-
 const showFindButton = document.querySelector('#nfrt-showFind');
 const dialog = document.querySelector('.nfrt-dialog');
 const audioFileInput = document.querySelector('#audioFile');
-const syncFileInput = document.querySelector('#syncFile');
 const findForm = document.querySelector('#nfrt-findForm');
 const audio = document.querySelector('#nfrt-audio');
 
-var _video = null;
 var _ready = false;
 var _offset = 0;
+
+function getMovieID() {
+  var href = window.location.href;
+  var matches = /netflix.com\/watch\/(\d+)[\/\?]*/.exec(href);
+  if (matches) {
+    return matches[1];
+  }
+  return null;
+}
+
+function getRiff() {
+  var id = getMovieID();
+  return KNOWN_RIFFS[id];
+}
 
 showFindButton.addEventListener('click', () => {
   dialog.style.display = 'block';
@@ -59,14 +70,16 @@ showFindButton.addEventListener('click', () => {
 
 findForm.addEventListener('submit', e => {
   const audioURL = URL.createObjectURL(audioFileInput.files[0]);
-  const syncURL = URL.createObjectURL(syncFileInput.files[0]);
 
-  getSyncOffset(syncURL, offset => {
-    _ready = true;
-    _offset = offset;
-    audio.src = audioURL;
-    audio.currentTime = offset;
-  });
+  console.log(getMovieID());
+  const riff = KNOWN_RIFFS[getMovieID()];
+
+  console.info('loaded riff: ' + riff.name);
+
+  _ready = true;
+  _offset = riff.offset;
+  audio.src = audioURL;
+  audio.currentTime = _offset;
 
   e.preventDefault();
 
@@ -83,11 +96,13 @@ function getVideoPlayer(callback) {
 }
 
 getVideoPlayer(video => {
-  _video = video;
-
   video.addEventListener('pause', function () {
     if (!_ready) {
-      content.style.display = 'block';
+      var riff = getRiff();
+      if (riff) {
+        video.volume = riff.videoVolume;
+        content.style.display = 'block';
+      }
     }
     audio.pause();
   });
@@ -98,7 +113,13 @@ getVideoPlayer(video => {
 
   video.addEventListener('seeked', function () {
     if (_ready) {
-      audio.currentTime = _offset + _video.currentTime;
+      var riff = getRiff();
+      if (!riff) {
+        _ready = false;
+        audio.pause();
+        return;
+      }
+      audio.currentTime = _offset + video.currentTime;
       audio.play();
     }
   });
@@ -106,7 +127,14 @@ getVideoPlayer(video => {
   video.addEventListener('playing', function () {
     content.style.display = 'none';
     if (_ready) {
-      audio.currentTime = _offset + _video.currentTime;
+      var riff = getRiff();
+      if (!riff) {
+        _ready = false;
+        audio.pause();
+        return;
+      }
+      video.volume = riff.videoVolume;
+      audio.currentTime = _offset + video.currentTime;
       audio.play();
     }
   });

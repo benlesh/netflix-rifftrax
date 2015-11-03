@@ -27,6 +27,8 @@
   "content_scripts": [
     {
       "matches": [
+        "*://*.netflix.com/*",
+        "*://netflix.com/*",
         "*://*.netflix.com/watch/*",
         "*://netflix.com/watch/*"
       ],

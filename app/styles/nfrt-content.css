@@ -2,7 +2,7 @@
   position: absolute;
   z-index: 1000000;
   top: 50px;
-  left: 25px;
+  right: 25px;
 }
 
 #nfrt .nfrt-dialog {
@@ -13,4 +13,13 @@
 
 #nfrt button {
   background: #333333;
+}
+
+#nfrt .row {
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+#nfrt h3 {
+  margin-bottom: 12px;
 }
