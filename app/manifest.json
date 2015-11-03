@@ -8,29 +8,20 @@
     "128": "images/icon-128.png"
   },
   "default_locale": "en",
-  "background": {
-    "scripts": [
-      "scripts/chromereload.js",
-      "scripts/background.js"
-    ]
-  },
   "permissions": [
-    "tabs",
-    "*://*.netflix.com/*",
-    "*://netflix.com/*",
+    "http://*.netflix.com/*",
+    "https://*.netflix.com/*",
+    "http://*.netflix.com/watch/*",
+    "https://*.netflix.com/watch/*",
     "storage"
   ],
-  "options_ui": {
-    "page": "options.html",
-    "chrome_style": true
-  },
   "content_scripts": [
     {
       "matches": [
-        "*://*.netflix.com/*",
-        "*://netflix.com/*",
-        "*://*.netflix.com/watch/*",
-        "*://netflix.com/watch/*"
+        "http://*.netflix.com/*",
+        "https://*.netflix.com/*",
+        "http://*.netflix.com/watch/*",
+        "https://*.netflix.com/watch/*"
       ],
       "js": [
         "scripts/nfrt-content.js"
