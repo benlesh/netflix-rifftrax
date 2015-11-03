@@ -24,9 +24,11 @@ After you've installed the Chrome Extension:
 1. Navigate to the movie you want to Riff on Netflix and start watching it.
 2. Once the movie is loaded, pause it. You'll see a "RiffTrax" button on the top of the screen.
 3. Press the "RiffTrax" button to open a dialog
-4. Select the RiffTrax .mp3 file
-5. Select the accompanying RiffTrax .sync file
-6. Press "Play" on the movie.
+4. Select the RiffTrax .mp3 file and click "Load"
+5. Press "Play" on the movie.
 
-Tip: If the audio is a little off, try seeking around the movie (rewind or fast-forward a little with the slider).
+Tips: 
 
+- If the RiffTrax button doesn't appear in the corner, refresh the page. 
+- If the audio is a little off, try seeking around the movie (rewind or fast-forward a little with the slider).
+- A current limitation of this extension is you may have to refresh the page between movies if you want to riff multiple movies.
